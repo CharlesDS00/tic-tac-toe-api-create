@@ -1,7 +1,16 @@
-const app = require('./app');
+const express = require('express');
+const mongoose = require('mongoose');
+const authRoutes = require('./routes/auth');
+const gameRoutes = require('./routes/game');
 
-const PORT = process.env.PORT || 5000;
+const app = express();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.use(express.json());
+
+app.use('/api', authRoutes);
+app.use('/api/games', gameRoutes);
+
+const db = require('./config/db');
+db.connect();
+
+app.listen(3000, () => console.log('Server running on port 3000'));
