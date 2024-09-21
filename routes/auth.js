@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const { Builder } = require('xml2js');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
@@ -17,11 +18,10 @@ router.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = new User({ username, password: hashedPassword });
     await user.save();
 
-    res.status(201).json({
+    const response = {
       message: res.__('registration_success'),
       user: {
         id: user._id,
@@ -39,7 +39,16 @@ router.post('/register', async (req, res) => {
           description: res.__('create_game_link_description')
         }
       }
-    });
+    };
+
+    if (req.headers['accept'] === 'application/xml') {
+      const builder = new Builder();
+      const xml = builder.buildObject(response); 
+      res.set('Content-Type', 'application/xml');
+      res.status(200).send(xml);
+    } else {
+      res.status(201).json(response); 
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -92,6 +101,5 @@ router.post('/login', async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
