@@ -8,5 +8,9 @@
   "registration_email_in_use": "Email already in use",
   "login_link_description": "Link to login after registration",
   "create_game_link_description": "Create a new game",
-  "view_profile_link_description": "View your profile"
+  "view_profile_link_description": "View your profile",
+  "not_your_turn": "Not your turn!",
+  "invalid_move": "Invalid move!",
+  "game_not_found": "Game not found!",
+  "move_successful": "Move successful!"
 }

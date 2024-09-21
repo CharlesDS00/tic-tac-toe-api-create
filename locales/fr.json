@@ -8,6 +8,9 @@
     "registration_email_in_use": "Email déjà utilisé",
     "login_link_description": "Lien pour se connecter après enregistrement",
     "create_game_link_description": "Créer une nouvelle partie",
-    "view_profile_link_description": "Voir votre profil"
-  }
-  
+    "view_profile_link_description": "Voir votre profil",
+    "not_your_turn": "Ce n'est pas votre tour!",
+    "invalid_move": "Coup invalide!",
+    "game_not_found": "Jeu non trouvé!",
+    "move_successful": "Coup réussi!"
+}

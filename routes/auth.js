@@ -1,8 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const Game = require('../models/game'); 
 const { Builder } = require('xml2js');
 const router = express.Router();
+
 
 router.post('/v1/register', async (req, res) => {
   try {
@@ -51,11 +53,10 @@ router.post('/v1/register', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: res.__('registration_error')
-    });
+    res.status(500).json({ message: res.__('registration_error') });
   }
 });
+
 
 router.post('/v1/login', async (req, res) => {
   try {
@@ -96,10 +97,70 @@ router.post('/v1/login', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: res.__('login_error')
-    });
+    res.status(500).json({ message: res.__('login_error') });
   }
 });
+
+
+router.post('/v1/game/move', async (req, res) => {
+  const { userId, gameId, position } = req.body;
+
+  try {
+    const game = await Game.findById(gameId);
+
+    if (!game) {
+      return res.status(404).json({ message: 'Game not found!' });
+    }
+
+    if (game.currentPlayer.toString() !== userId.toString()) {
+      return res.status(403).json({ message: 'Not your turn!' });
+    }
+
+    if (position < 0 || position > 8 || game.board[position] !== null) {
+      return res.status(400).json({ message: 'Invalid move!' });
+    }
+
+    game.board[position] = game.currentPlayerSymbol;
+
+    if (checkWin(game.board, game.currentPlayerSymbol)) {
+      game.winner = game.currentPlayer;
+    }
+
+    game.currentPlayer = getNextPlayer(game);
+    game.currentPlayerSymbol = game.currentPlayerSymbol === 'X' ? 'O' : 'X';
+    await game.save();
+
+    res.status(200).json({ message: 'Move successful!', game });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while processing the move.' });
+  }
+});
+
+
+function checkWin(board, symbol) {
+  const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  return winningCombinations.some(combination => 
+    combination.every(index => board[index] === symbol)
+  );
+}
+
+
+function getNextPlayer(game) {
+  const players = game.players;
+  const currentIndex = players.indexOf(game.currentPlayer.toString());
+  const nextIndex = (currentIndex + 1) % players.length;
+  return players[nextIndex];
+}
 
 module.exports = router;
