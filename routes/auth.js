@@ -4,7 +4,7 @@ const User = require('../models/user');
 const { Builder } = require('xml2js');
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/v1/register', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -29,12 +29,12 @@ router.post('/register', async (req, res) => {
       },
       links: {
         login: {
-          href: 'http://localhost:3000/api/login',
+          href: 'http://localhost:3000/api/v1/login',
           method: 'POST',
           description: res.__('login_link_description') 
         },
         createGame: {
-          href: 'http://localhost:3000/api/game/create',
+          href: 'http://localhost:3000/api/v1/game/create',
           method: 'POST',
           description: res.__('create_game_link_description')
         }
@@ -43,11 +43,11 @@ router.post('/register', async (req, res) => {
 
     if (req.headers['accept'] === 'application/xml') {
       const builder = new Builder();
-      const xml = builder.buildObject(response); 
+      const xml = builder.buildObject(response);
       res.set('Content-Type', 'application/xml');
       res.status(200).send(xml);
     } else {
-      res.status(201).json(response); 
+      res.status(201).json(response);
     }
   } catch (error) {
     console.error(error);
@@ -57,7 +57,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/v1/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -83,12 +83,12 @@ router.post('/login', async (req, res) => {
       },
       links: {
         createGame: {
-          href: 'http://localhost:3000/api/game/create',
+          href: 'http://localhost:3000/api/v1/game/create',
           method: 'POST',
           description: res.__('create_game_link_description')
         },
         viewProfile: {
-          href: `http://localhost:3000/api/users/${user._id}`,
+          href: `http://localhost:3000/api/v1/users/${user._id}`,
           method: 'GET',
           description: res.__('view_profile_link_description')
         }
