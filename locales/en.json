@@ -1,0 +1,27 @@
+{
+  "greeting": "Welcome to the Tic-Tac-Toe game!",
+  "registration": {
+    "success": "User successfully registered.",
+    "error": "Error during registration. Please try again.",
+    "email_in_use": "The email is already in use.",
+    "invalid_email": "Please provide a valid email address."
+  },
+  "login": {
+    "success": "Login successful. Welcome back!",
+    "error": "Invalid email or password. Please try again.",
+    "missing_fields": "Please provide username and password"
+
+  },
+  "game": {
+    "start": "The game has started. Good luck!",
+    "turn": "It's your turn.",
+    "waiting": "Waiting for the other player...",
+    "win": "Congratulations! You won the game!",
+    "lose": "You lost. Better luck next time.",
+    "draw": "The game ended in a draw."
+  },
+  "error": {
+    "not_found": "The requested resource could not be found.",
+    "internal": "An internal error occurred. Please try again later."
+  }
+}
